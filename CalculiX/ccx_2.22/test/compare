@@ -1,0 +1,98 @@
+#!/bin/sh
+make clean #先清理之前运行产生的文件
+export OMP_NUM_THREADS=1
+rm -f error.*      #删除掉之前生成的错误文件
+tmpfile=tmp.$$   #$$表示当前进程的PID，一般用于生成唯一的文件名
+errorfile=error.$$
+#逐个对每个.inp文件进行处理
+for i in *.inp; do
+### 不处理以下.inp文件，因为它们是通过运行其他例子产生的
+	if [ $i = beam10psmooth.rfn.inp ] || [ $i = circ10pcent.rfn.inp ] || [ $i = circ10p.rfn.inp ] || [ $i = segmentsmooth.rfn.inp ] || [ $i = segmentsmooth2.rfn.inp ]
+	then
+	    continue
+	fi
+### 不处理以下文件，因为它们涉及重启动问题，有的需要修改inp文件或调整运行顺序
+	if [ $i = axrad2.inp ] || [ $i = beamhtfc2.inp ] || [ $i = beamread.inp ] || [ $i = beamread2.inp ] || [ $i = beamread3.inp ] || [ $i = beamread4.inp ] || [ $i = crackIIinta.inp ]
+	then
+	    continue
+	fi
+### 这几个文件的时间太长了，可以不测试，去除之前耗时6分钟，之后耗时3分钟。
+	if [ $i = anipla_nl_dy_exp.inp ] || [ $i = channelcbs.inp ] || [ $i = coucylcentcomp.inp ] || [ $i = couette2.inp ] || [ $i = couseg3.inp ] || [ $i = furnace.inp ] || [ $i = hueeber1.inp ] || [ $i = hueeber2.inp ] || [ $i = induction2.inp ] || [ $i = induction3.inp ] || [ $i = moehring.inp ] || [ $i = rotor3.inp ] || [ $i = slant.inp ] || [ $i = thermomech.inp ] || [ $i = hueeber1_mortar.inp ] || [ $i = hueeber2_mortar.inp ]
+	then
+	    continue
+	fi
+### 这是ccx输出的调试文件
+	if [ $i = input.inp ]
+	then
+	    continue
+	fi
+	echo -n "Run example ${i%.inp}    "
+# 删除掉之前运行产生的对应的.dat和.frd文件
+	rm -f ${i%.inp}.dat  #${i%.inp}表示从变量i的末尾去掉.inp，这句话要删除的是xx.inp对应的xx.dat。
+	rm -f ${i%.inp}.frd
+# 执行CalculiX，生成.dat和.frd文件，将命令行输出保存到tmpfile文件。需要的话可以修改可执行文件的路径
+    start=$(date +%s.%N)
+    ccx -i ${i%.inp} > /dev/null 2>&1
+    #../src/ccx_2.22-official -i ${i%.inp} > /dev/null 2>&1
+    end=$(date +%s.%N)
+    runtime=$(echo "$end - $start" | bc)
+    echo "消耗时间: $runtime 秒"
+# 检查是否生成了对应的.dat和自带的.dat.ref文件是否存在
+	if [ ! -f ${i%.inp}.dat ]; then
+	   echo "${i%.inp}.dat does not exist" >> $errorfile #将错误输出到errorfile中
+	   continue
+	fi
+	if [ ! -f ${i%.inp}.dat.ref ]; then
+	   echo "${i%.inp}.dat.ref does not exist" >> $errorfile
+	   continue
+	fi
+# 检查.dat和.dat.ref这两个文件行数是否一致
+	export sum1=`wc -l ${i%.inp}.dat | awk '{print$1}'`
+	export sum2=`wc -l ${i%.inp}.dat.ref | awk '{print$1}'`
+	if [ $sum1 != $sum2 ]; then
+	   echo "${i%.inp}.dat and ${i%.inp}.dat.ref do not have the same size !!!!!!!!!!" >> $errorfile
+	   echo " ">> $errorfile
+	   continue
+	fi
+# 检查.dat文件中是否存在NaN
+	if grep "NaN" ${i%.inp}.dat ; then
+	   echo "${i%.inp}.dat contains NaN !!!!!!!!!!" >> $errorfile
+	   echo " " >> $errorfile
+	   continue
+	fi
+# 检查.dat和.dat.ref文件中数字的偏差是否在允许范围内，具体由datcheck.pl负责
+	./datcheck.pl ${i%.inp} >> $errorfile
+# 检查.frd和.frd.ref文件是否存在
+	if grep "^ -5" ${i%.inp}.frd >| abc  || [ -f ${i%.inp}.frd.ref ] ; then
+		if [ ! -f ${i%.inp}.frd ]; then
+			echo "${i%.inp}.frd does not exist" >> $errorfile
+			continue
+		fi
+		if [ ! -f ${i%.inp}.frd.ref ]; then
+			echo "${i%.inp}.frd.ref does not exist" >> $errorfile
+			continue
+		fi
+# 检查.dat和.dat.ref这两个文件行数是否一致
+		export sum1=`wc -l ${i%.inp}.frd | awk '{print$1}'`
+		export sum2=`wc -l ${i%.inp}.frd.ref | awk '{print$1}'`
+		if [ $sum1 != $sum2 ]; then
+            echo "${i%.inp}.frd and ${i%.inp}.frd.ref do not have the same size !!!!!!!!!!!!!!!!!!!!!!" >> $errorfile
+            echo " ">> $errorfile
+            continue
+		fi
+# 检查.dat和.dat.ref文件中数字的偏差是否在允许范围内，具体由frdcheck.pl负责
+	    ./frdcheck.pl ${i%.inp} >> $errorfile
+        fi
+done
+#删除掉生成的中间文件，但是保留自带的5个文件。
+find . -name "*.rfn.inp" -not -name "beam10psmooth.rfn.inp" -not -name "circ10pcent.rfn.inp" -not -name "circ10p.rfn.inp" -not -name "segmentsmooth.rfn.inp" -not -name "segmentsmooth2.rfn.inp" -exec rm -f {} +
+rm -rf $tmpfile #删除掉生成的命令行输出文件
+if [ ! -s $errorfile ] #由于前面的命令行，会导致无论是否检出错误，都会生成errorfile。如果错误文件为空，则删除它。
+then
+	rm -f $errorfile
+	echo "Verification Passed!"
+	make clean
+else
+	echo "Verification Not Passed!"
+	echo "Check the errorfile of file $errorfile"
+fi

@@ -1,0 +1,28 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "构建ccx_2.22",
+            "command": "make", //调用make
+            "args": [
+                "-j" //并行构建
+            ],
+            "options": {
+                "cwd": "/home/zj/CCX/CalculiX/ccx_2.22/src"
+            },
+            "presentation": {
+                "revealProblems": "onProblem", //只有在构建遇到问题时才会显示问题
+                "close": true //自动关闭构建结果面板
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true //设置为默认的task
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}
