@@ -34,7 +34,7 @@ ccx_2.22.a: $(OCCXF) $(OCCXC)
 
 clean:
 	rm -f *.o */*.o *.a ccx_2.22
-	rm -f *.expand *.png *.pdf callgrind.out.*
+	rm -f *.expand */*.expand *.png *.pdf callgrind.out.*
 	rm -f input.* spooles.out #并不需要了，因为已经添加了修改工作目录的代码
 	rm -f .vscode-ctags .ctags tags
 
