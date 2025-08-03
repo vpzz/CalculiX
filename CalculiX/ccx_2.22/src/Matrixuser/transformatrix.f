@@ -34,7 +34,7 @@
       if(xab(7).gt.0) then
 !
 !        carthesian transformation
-!
+!        对于直角坐标系来说，点p没有用，因为直角坐标系是可以任意平移的
          e1(1)=xab(1)
          e1(2)=xab(2)
          e1(3)=xab(3)
@@ -42,22 +42,22 @@
          e2(1)=xab(4)
          e2(2)=xab(5)
          e2(3)=xab(6)
-!
+!        对e1向量进行归一化
          dd=dsqrt(e1(1)*e1(1)+e1(2)*e1(2)+e1(3)*e1(3))
          do j=1,3
             e1(j)=e1(j)/dd
          enddo
-!
+!        e2向量减去向量e2在单位向量e1上的投影
          dd=e1(1)*e2(1)+e1(2)*e2(2)+e1(3)*e2(3)
          do j=1,3
             e2(j)=e2(j)-dd*e1(j)
          enddo
-!
+!        对e2向量进行归一化
          dd=dsqrt(e2(1)*e2(1)+e2(2)*e2(2)+e2(3)*e2(3))
          do j=1,3
             e2(j)=e2(j)/dd
          enddo
-!
+!        根据e1和e2求得e3向量，无需再进行归一化
          e3(1)=e1(2)*e2(3)-e2(2)*e1(3)
          e3(2)=e1(3)*e2(1)-e1(1)*e2(3)
          e3(3)=e1(1)*e2(2)-e2(1)*e1(2)
@@ -75,7 +75,7 @@
          e3(3)=xab(6)-xab(3)
 !
          dd=dsqrt(e3(1)*e3(1)+e3(2)*e3(2)+e3(3)*e3(3))
-!
+!        归一化e3
          do j=1,3
             e3(j)=e3(j)/dd
          enddo
@@ -91,7 +91,7 @@
 !        check whether p belongs to the cylindrical coordinate axis
 !        if so, an arbitrary vector perpendicular to the axis can
 !        be taken
-!
+!        检查p点是否在圆柱坐标系得轴上，如果是，则取任意一个垂直于轴的矢量
          if(dd.lt.1.d-10) then
 c            write(*,*) '*WARNING in transformatrix: point on axis'
             if(dabs(e3(1)).gt.1.d-10) then
@@ -121,7 +121,7 @@ c            write(*,*) '*WARNING in transformatrix: point on axis'
       endif
 !
 !     finding the transformation matrix
-!
+!     将e1,e2,e3向量拼装得到变换矩阵a
       do j=1,3
          a(j,1)=e1(j)
          a(j,2)=e2(j)
@@ -130,16 +130,3 @@ c            write(*,*) '*WARNING in transformatrix: point on axis'
 !
       return
       end
-
-
-
-
-
-
-
-
-
-
-
-
-

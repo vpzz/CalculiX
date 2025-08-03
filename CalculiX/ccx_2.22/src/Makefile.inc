@@ -1,8 +1,6 @@
 SCCXF = \
 allocation.f \
-allocation_rfn.f \
 calinput.f \
-calinput_rfn.f \
 createmdelem.f \
 noelfiles.f \
 restartread.f \
@@ -68,7 +66,6 @@ CFD/flux.f \
 CFD/free_convection.f \
 CFD/free_disc_pumping.f \
 CFD/friction_coefficient.f \
-CFD/gapcon.f \
 CFD/gaspipe_fanno.f \
 CFD/gaspipe_rot.f \
 CFD/hcrit.f \
@@ -720,10 +717,8 @@ MPC/changedepterm.f \
 MPC/createinterfacempcs.f \
 MPC/fillknotmpc.f \
 MPC/generatecycmpcs.f \
-MPC/genmpc.f \
 MPC/gentiedmpc.f \
 MPC/knotmpc.f \
-MPC/modifympc.f \
 MPC/mpcadd.f \
 MPC/mpcrem.f \
 MPC/networkmpc_lhs.f \
@@ -812,9 +807,11 @@ Radiation/postview.f \
 Radiation/radmatrix.f \
 Radiation/radresult.f \
 Radiation/readview.f \
+Refine/allocation_rfn.f \
 Refine/calculated.f \
 Refine/calculateh.f \
 Refine/calculatehmid.f \
+Refine/calinput_rfn.f \
 Refine/catedges_refine.f \
 Refine/catnodes.f \
 Refine/cattet.f \
@@ -829,11 +826,13 @@ Refine/fumid.f \
 Refine/fuvertex.f \
 Refine/generatetet_refine2.f \
 Refine/generatetet_refine.f \
+Refine/genmpc.f \
 Refine/genratio.f \
 Refine/getnodesinitetmesh.f \
 Refine/meshqualitycavity.f \
 Refine/midexternaledges.f \
 Refine/midexternalfaces.f \
+Refine/modifympc.f \
 Refine/projectmidnodes.f \
 Refine/projectvertexnodes.f \
 Refine/reinit_refine.f \
@@ -912,6 +911,7 @@ Subroutine/dflux.f \
 Subroutine/dload.f \
 Subroutine/film.f \
 Subroutine/fricheat.f \
+Subroutine/gapcon.f \
 Subroutine/propertynet.f \
 Subroutine/radiate.f \
 Subroutine/sdvini.f \

@@ -126,7 +126,7 @@
 !
 !     the plastic strain tensor is stored in state variables 2...7
 !
-!
+!     应力*塑性应变增量，2.0是因为应变张量为张量而非工程
       flux(1)=(sti(1,npt,noel)*
      &            (xstate(2,npt,noel)-xstateini(2,npt,noel))+
      &         sti(2,npt,noel)*

@@ -17,7 +17,7 @@
 !     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 !
       subroutine shape8q(xi,et,xl,xsj,xs,shp,iflag)
-!
+!     8节点二次四边形等参元的形函数和关于局部坐标或全局坐标的导函数值
 !     shape functions and derivatives for a 8-node quadratic
 !     isoparametric quadrilateral element. -1<=xi,et<=1 
 !
@@ -72,7 +72,7 @@
       if(iflag.eq.1) return
 !
 !     local derivatives of the shape functions: xi-derivative
-!
+!     对局部坐标xi进行求导
       shp(1,1)=etm*(xi+xipet)/4.d0
       shp(1,2)=etm*(xi+ximet)/4.d0
       shp(1,3)=etp*(xi+xipet)/4.d0
@@ -83,7 +83,7 @@
       shp(1,8)=-etm2/2.d0
 !
 !     local derivatives of the shape functions: eta-derivative
-!
+!     对局部坐标et进行求导
       shp(2,1)=xim*(et+xipet)/4.d0
       shp(2,2)=xip*(et-ximet)/4.d0
       shp(2,3)=xip*(et+xipet)/4.d0
@@ -97,7 +97,7 @@
 !
 !     computation of the local derivative of the global coordinates
 !     (xs)
-!
+!     xl为8个节点的全局坐标,xs为全局坐标的导数矩阵
       do i=1,3
         do j=1,2
           xs(i,j)=0.d0
@@ -108,7 +108,7 @@
       enddo
 !
 !     computation of the jacobian vector
-!
+!     叉乘获得局部法向量
       xsj(1)=xs(2,1)*xs(3,2)-xs(3,1)*xs(2,2)
       xsj(2)=xs(1,2)*xs(3,1)-xs(3,2)*xs(1,1)
       xsj(3)=xs(1,1)*xs(2,2)-xs(2,1)*xs(1,2)
@@ -117,7 +117,7 @@
 !
 !     computation of the global derivative of the local coordinates
 !     (xsi) (inversion of xs)
-!
+!     将局部导数转换为全局坐标系的导数
         d1=dabs(xsj(1))
         d2=dabs(xsj(2))
         d3=dabs(xsj(3))
@@ -204,7 +204,7 @@
       elseif(iflag.eq.4) then
 !
 !     local 2nd order derivatives of the shape functions: xi,xi-derivative
-!     
+!     对局部坐标的2阶导数，共有3种
          shp(5,1)=etm/2.d0
          shp(5,2)=etm/2.d0
          shp(5,3)=etp/2.d0

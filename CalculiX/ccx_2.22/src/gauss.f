@@ -1,6 +1,6 @@
 !
 !     contains Gauss point information
-!
+!     高斯积分点位置和权重，对于三角形，四边形和楔形的部分使用面积或体积坐标
 !     gauss1d1: lin, 1-point integration (1 integration point)
 !     gauss1d2: lin, 2-point integration (2 integration points)
 !     gauss1d3: lin, 3-point integration (3 integration points)

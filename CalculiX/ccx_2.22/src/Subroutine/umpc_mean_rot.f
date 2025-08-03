@@ -64,7 +64,7 @@
       endif
 !
 !     normal along the rotation axis
-!
+!     从最后一个节点坐标取出转轴向量并归一化
       dd=0.d0
       do i=1,3
          aa(i)=x(i,n)

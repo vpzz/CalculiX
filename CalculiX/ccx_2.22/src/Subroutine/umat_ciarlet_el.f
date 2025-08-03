@@ -132,7 +132,7 @@
 !
 !     change on 190315: input are Young's modulus and Poisson's
 !     coefficient instead of the Lame constants
-!
+!     输入参数改为E和nu，而非拉梅常数，在这里手动进行换算
       e=elconloc(1)
       un=elconloc(2)
       mu=e/(1.d0+un)
@@ -167,11 +167,11 @@ c     C1  = matmul(transpose(xkl),xkl)
       C1(2,3)=2.d0*emec(6)
       C1(3,2)=C1(2,3)
 C
-C     2PK-Stress at C:
+C     2PK-Stress at C: 计算应力
       call S2_Ciarlet(C1,lamda,mu, S2PK1,C1i,detC1)
-C     Tangent/linearization:
+C     Tangent/linearization: 计算刚度
       call dS2_Ciarlet_dE(lamda,mu,detC1,C1i,dS2dE)
-
+C     将2阶应力张量和4阶刚度张量转化为voigt向量和矩阵标记
 C     Dhondt-Voigt-Order, see umat_lin_iso_el.f
       call voigt_33mat_to_6vec(S2PK1,stre)
       call voigt_tetrad_to_matrix(dS2dE,stiff)
@@ -288,7 +288,7 @@ C     local:
       integer I,J
       logical OK_FLAG
 
-C     Set id:
+C     Set id: 构造单位矩阵
       do I=1,3
          do J=1,3
             id(I,J)=0.d0
@@ -342,7 +342,7 @@ C
 C
 C     !******************************************************************
 C     !  M33INV_DET  -  Compute the inverse of a 3x3 matrix.
-C     !
+C     !  计算3阶矩阵的行列式和逆矩阵
 C     !  A       = input 3x3 matrix to be inverted
 C     !  AINV    = output 3x3 inverse of matrix A
 C     !  OK_FLAG = (output) .TRUE. if the input matrix could be inverted, 

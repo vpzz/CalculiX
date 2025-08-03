@@ -119,7 +119,8 @@
      &     coefmpc(*),veold(0:mi(2),*)
 !
          include "../gauss.f"
-!
+!        分别为二阶六面体(20点)，四面体(10点)，楔形(15点)单元的
+!        各个表面对应的节点连接拓扑
          ifaceq=reshape((/4,3,2,1,11,10,9,12,
      &               5,6,7,8,13,14,15,16,
      &               1,2,6,5,9,18,13,17,
@@ -141,8 +142,8 @@
          ig=jltyp-20
 !
          if(lakonl(4:4).eq.'2') then
-            nope=20
-            nopes=8
+            nope=20 !单元的节点数
+            nopes=8 !单元每个面的节点数
          elseif(lakonl(4:4).eq.'8') then
             nope=8
             nopes=4
@@ -162,9 +163,9 @@
 !
          if(lakonl(4:4).eq.'6') then
             if(ig.le.2) then
-               nopes=3
+               nopes=3   !作用在楔形单元的三角形面上
             else
-               nopes=4
+               nopes=4   !作用在楔形单元的四边形面上
             endif
          endif
          if(lakonl(4:5).eq.'15') then
@@ -183,9 +184,9 @@
 !
          if((nope.eq.20).or.(nope.eq.8)) then
             do i=1,nopes
-               node=konl(ifaceq(i,ig))
+               node=konl(ifaceq(i,ig))  !获取ig面的第i号(局部)节点对应的全局节点号
                idof=8*(node-1)
-               call nident(ikmpc,idof,nmpc,id)
+               call nident(ikmpc,idof,nmpc,id) !为idof在ikmpc中寻找一个位置
                if((id.eq.0).or.(ikmpc(id).ne.idof)) then
                   write(*,*) '*ERROR in dload: node ',node
                   write(*,*) '       is not connected to the oil film'

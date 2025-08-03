@@ -1,5 +1,5 @@
-CFLAGS = -Wall -g -O -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-maybe-uninitialized -I ../../../SPOOLES.2.2 -DARCH="Linux" -DSPOOLES -DARPACK -DMATRIXSTORAGE -DNETWORKOUT #指定SPOOLES头文件的目录，定义宏SPOOLES和ARPACK表示使用这两个库，-g调试。
-FFLAGS = -Wall -g -O -Wno-unused-label -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -std=legacy #设置-std=legacy会使得gfortran8及以上的编译器在编译老代码中不再被支持的特性时，不会报错。
+CFLAGS = -fdump-rtl-expand -Wall -g -O -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-maybe-uninitialized -I ../../../SPOOLES.2.2 -DARCH="Linux" -DSPOOLES -DARPACK -DMATRIXSTORAGE -DNETWORKOUT #指定SPOOLES头文件的目录，定义宏SPOOLES和ARPACK表示使用这两个库，-g调试。
+FFLAGS = -fdump-rtl-expand -Wall -g -O -Wno-unused-label -Wno-maybe-uninitialized -Wno-unused-dummy-argument -Wno-unused-variable -std=legacy #设置-std=legacy会使得gfortran8及以上的编译器在编译老代码中不再被支持的特性时，不会报错。
 
 CC = gcc
 FC = gfortran

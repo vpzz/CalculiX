@@ -6,7 +6,7 @@ c
       real*8 a,b
 c
 c     finds dsqrt(a**2+b**2) without overflow or destructive underflow
-c
+c     计算三角形斜边长度的数值稳定算法
       real*8 p,r,s,t,u
       p = dmax1(dabs(a),dabs(b))
       if (p .eq. 0.0d0) go to 20
